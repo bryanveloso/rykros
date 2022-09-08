@@ -1,12 +1,12 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TwitchModule } from './twitch/twitch.module';
-import { TwitchModule } from './twitch/twitch.module';
+import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { TwitchModule } from './twitch/twitch.module'
 
 @Module({
-  imports: [TwitchModule],
+  imports: [ConfigModule.forRoot(), TwitchModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
 export class AppModule {}

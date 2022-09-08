@@ -1,8 +1,10 @@
-import { Module } from '@nestjs/common';
-import { TwitchService } from './twitch.service';
-import { TwitchGateway } from './twitch.gateway';
+import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+
+import { TwitchService } from './twitch.service'
 
 @Module({
-  providers: [TwitchGateway, TwitchService]
+  imports: [ConfigModule],
+  providers: [TwitchService]
 })
 export class TwitchModule {}
