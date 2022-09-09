@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config'
 import { ApiClient } from '@twurple/api'
-import { EventSubListener, ReverseProxyAdapter } from '@twurple/eventsub'
+import { EventSubListener, EnvPortAdapter } from '@twurple/eventsub'
 import { NgrokAdapter } from '@twurple/eventsub-ngrok'
 
 const listener = (apiClient: ApiClient, configService: ConfigService) => {
@@ -8,12 +8,13 @@ const listener = (apiClient: ApiClient, configService: ConfigService) => {
   const isLocal = Boolean(
     configService.get<string>('NODE_ENV') === 'development'
   )
-  const port = Number(configService.get<string>('TWITCH_EVENTSUB_PORT')) || 8008
-  const hostName = configService.get<string>('TWITCH_CALLBACK_HOSTNAME')
+
+  // Since we're using Render, we'll be "hardcoding" this.
+  const hostName = configService.get<string>('RENDER_EXTERNAL_HOSTNAME')
 
   const adapter = isLocal
     ? new NgrokAdapter()
-    : new ReverseProxyAdapter({ hostName, port })
+    : new EnvPortAdapter({ hostName })
 
   return new EventSubListener({
     apiClient,
