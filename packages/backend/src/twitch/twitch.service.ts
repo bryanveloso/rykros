@@ -12,8 +12,10 @@ import TwitchClient from './twitch.client'
 import TwitchListener from './twitch.listener'
 
 @Injectable()
-export class TwitchService implements OnModuleInit, OnModuleDestroy {
+export class TwitchService implements OnModuleDestroy {
   private readonly logger = new Logger(TwitchService.name)
+  private channelId: string
+
   private apiClient: ApiClient
   private listener: EventSubListener
 
@@ -25,9 +27,14 @@ export class TwitchService implements OnModuleInit, OnModuleDestroy {
     this.listener = listener
   }
 
-  async onModuleInit(): Promise<void> {
-    this.listener.listen()
-    this.subscribeToChannelSubscriptionEvents('38981465')
+  async init(channelId: string): Promise<void> {
+    this.channelId = channelId
+
+    this.logger.log(`Connecting to EventSub`)
+    this.unsubscribeAll()
+    await this.listener.listen()
+
+    // this.subscribeToChannelSubscriptionEvents(this.channelId)
   }
 
   async onModuleDestroy(): Promise<void> {
@@ -44,6 +51,10 @@ export class TwitchService implements OnModuleInit, OnModuleDestroy {
     return this.apiClient.eventSub.getSubscriptions()
   }
 
+  async unsubscribeAll() {
+    await this.apiClient.eventSub.deleteAllSubscriptions()
+  }
+
   async subscribeToChannelSubscriptionEvents(userId: string) {
     const listener = await this.listener.subscribeToChannelSubscriptionEvents(
       userId,
@@ -53,9 +64,5 @@ export class TwitchService implements OnModuleInit, OnModuleDestroy {
     )
     const command = await listener.getCliTestCommand()
     this.logger.log(command)
-  }
-
-  async unsubscribeAll() {
-    await this.apiClient.eventSub.deleteAllSubscriptions()
   }
 }

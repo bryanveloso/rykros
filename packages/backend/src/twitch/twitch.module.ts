@@ -6,6 +6,7 @@ import { TwitchService } from './twitch.service'
 
 @Module({
   imports: [ConfigModule],
-  providers: [TwitchService, TwitchGateway]
+  providers: [TwitchService, TwitchGateway],
+  exports: [TwitchService]
 })
 export class TwitchModule {}
