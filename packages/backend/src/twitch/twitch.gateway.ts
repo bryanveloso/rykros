@@ -6,7 +6,7 @@ import {
   WebSocketGateway,
   WebSocketServer
 } from '@nestjs/websockets'
-import { Server, Socket } from 'socket.io'
+import { Server, WebSocket } from 'ws'
 
 import { TwitchService } from './twitch.service'
 
@@ -21,19 +21,20 @@ export class TwitchGateway
   @WebSocketServer() server: Server
   private readonly logger = new Logger(`${TwitchGateway.name}`)
 
-  sendMessage(message: string): void {
-    this.server.emit('message', message)
+  sendNotification(notification: string): void {
+    this.logger.debug(notification)
+    this.server.emit('notification', notification)
   }
 
   afterInit(server: Server) {
     this.logger.log('Init')
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log(`Client connected: ${client.id}`)
+  handleConnection(client: WebSocket, ...args: any[]) {
+    this.logger.log(`Client connected: ${client}`)
   }
 
-  handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`)
+  handleDisconnect(client: WebSocket) {
+    this.logger.log(`Client disconnected: ${client}`)
   }
 }

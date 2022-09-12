@@ -1,3 +1,4 @@
+import * as Joi from 'joi'
 import { Logger, Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 
@@ -6,8 +7,15 @@ import { AppService } from './app.service'
 import { TwitchModule } from './twitch/twitch.module'
 import { TwitchService } from './twitch/twitch.service'
 
+const validationSchema = Joi.object({
+  NODE_ENV: Joi.string()
+    .valid('development', 'production')
+    .default('development'),
+  PORT: Joi.number().default(8008)
+})
+
 @Module({
-  imports: [ConfigModule.forRoot(), TwitchModule],
+  imports: [ConfigModule.forRoot({ validationSchema }), TwitchModule],
   controllers: [AppController],
   providers: [AppService]
 })
