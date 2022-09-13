@@ -1,15 +1,11 @@
-import {
-  Injectable,
-  Logger,
-  OnModuleDestroy,
-  OnModuleInit
-} from '@nestjs/common'
+import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { ApiClient } from '@twurple/api/lib'
 import { EventSubListener } from '@twurple/eventsub/lib'
 
 import TwitchClient from './twitch.client'
 import TwitchListener from './twitch.listener'
+import { TwitchGateway } from './twitch.gateway'
 
 @Injectable()
 export class TwitchService implements OnModuleDestroy {
@@ -19,7 +15,10 @@ export class TwitchService implements OnModuleDestroy {
   private apiClient: ApiClient
   private listener: EventSubListener
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly gateway: TwitchGateway
+  ) {
     const apiClient = TwitchClient(configService)
     const listener = TwitchListener(apiClient, configService)
 
@@ -34,7 +33,7 @@ export class TwitchService implements OnModuleDestroy {
     this.unsubscribeAll()
     await this.listener.listen()
 
-    // this.subscribeToChannelSubscriptionEvents(this.channelId)
+    this.subscribeToChannelSubscriptionEvents(this.channelId)
   }
 
   async onModuleDestroy(): Promise<void> {
@@ -60,6 +59,7 @@ export class TwitchService implements OnModuleDestroy {
       userId,
       async e => {
         this.logger.log(e)
+        this.gateway.sendNotification(e)
       }
     )
     const command = await listener.getCliTestCommand()

@@ -8,8 +8,6 @@ import {
 } from '@nestjs/websockets'
 import { Server, WebSocket } from 'ws'
 
-import { TwitchService } from './twitch.service'
-
 @WebSocketGateway({
   cors: {
     origin: '*'
@@ -21,13 +19,8 @@ export class TwitchGateway
   @WebSocketServer() server: Server
   private readonly logger = new Logger(`${TwitchGateway.name}`)
 
-  sendNotification(notification: string): void {
-    this.logger.debug(notification)
-    this.server.emit('notification', notification)
-  }
-
   afterInit(server: Server) {
-    this.logger.log('Init')
+    this.logger.log('WebSocketServer initialized')
   }
 
   handleConnection(client: WebSocket, ...args: any[]) {
@@ -36,5 +29,12 @@ export class TwitchGateway
 
   handleDisconnect(client: WebSocket) {
     this.logger.log(`Client disconnected: ${client}`)
+  }
+
+  sendNotification(notification: any): void {
+    this.logger.debug(notification)
+    this.server.clients.forEach(client => {
+      client.send(notification)
+    })
   }
 }
