@@ -34,6 +34,7 @@ export class TwitchService implements OnModuleDestroy {
     await this.listener.listen()
 
     this.subscribeToChannelSubscriptionEvents(this.channelId)
+    this.subscribeToChannelSubscriptionMessageEvents(this.channelId)
   }
 
   async onModuleDestroy(): Promise<void> {
@@ -62,6 +63,19 @@ export class TwitchService implements OnModuleDestroy {
         this.gateway.sendNotification(e)
       }
     )
+    const command = await listener.getCliTestCommand()
+    this.logger.log(command)
+  }
+
+  async subscribeToChannelSubscriptionMessageEvents(userId: string) {
+    const listener =
+      await this.listener.subscribeToChannelSubscriptionMessageEvents(
+        userId,
+        async e => {
+          this.logger.log(e)
+          this.gateway.sendNotification(e)
+        }
+      )
     const command = await listener.getCliTestCommand()
     this.logger.log(command)
   }
