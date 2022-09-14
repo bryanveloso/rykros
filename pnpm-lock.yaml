@@ -14,7 +14,6 @@ importers:
       '@nestjs/mapped-types': '*'
       '@nestjs/platform-express': ^9.0.0
       '@nestjs/platform-socket.io': ^9.0.11
-      '@nestjs/platform-ws': ^9.0.11
       '@nestjs/schematics': ^9.0.0
       '@nestjs/testing': ^9.0.0
       '@nestjs/websockets': ^9.0.11
@@ -47,7 +46,6 @@ importers:
       ts-node: ^10.0.0
       tsconfig-paths: 4.1.0
       typescript: ^4.7.4
-      ws: ^8.8.1
     dependencies:
       '@nestjs/common': 9.0.11_j5hagqx4mwzscud4kyjdvubauy
       '@nestjs/config': 2.2.0_3mdbamkp7cmelffjfexsjo7tau
@@ -55,7 +53,6 @@ importers:
       '@nestjs/mapped-types': 1.1.0_kwoed2zlma2xzypc5akrjwfna4
       '@nestjs/platform-express': 9.0.11_khr6mt6ojlxbw7bo55fknouh34
       '@nestjs/platform-socket.io': 9.0.11_arvkpsejr32vji2s3rye3fygfa
-      '@nestjs/platform-ws': 9.0.11_arvkpsejr32vji2s3rye3fygfa
       '@nestjs/websockets': 9.0.11_lta74l7a56f7avmhvq6ggypouy
       '@twurple/api': 5.2.3_@twurple+auth@5.2.3
       '@twurple/auth': 5.2.3
@@ -67,7 +64,6 @@ importers:
       rimraf: 3.0.2
       rxjs: 7.5.6
       socket.io: 4.5.2
-      ws: 8.8.1
     devDependencies:
       '@nestjs/cli': 9.1.2
       '@nestjs/schematics': 9.0.3_whhyl7r7sm4vygdnh5naaknfkm
@@ -1060,23 +1056,6 @@ packages:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  /@nestjs/platform-ws/9.0.11_arvkpsejr32vji2s3rye3fygfa:
-    resolution: {integrity: sha512-0e2AFXTIdxB/TLN5Ll2ipg2sBfZVzgMWSHL0IWUItQO/f6JI8gMFRtxopdSC/1mTv2zbgAI8VSwKEaqrhbztgg==}
-    peerDependencies:
-      '@nestjs/common': ^9.0.0
-      '@nestjs/websockets': ^9.0.0
-      rxjs: ^7.1.0
-    dependencies:
-      '@nestjs/common': 9.0.11_j5hagqx4mwzscud4kyjdvubauy
-      '@nestjs/websockets': 9.0.11_lta74l7a56f7avmhvq6ggypouy
-      rxjs: 7.5.6
-      tslib: 2.4.0
-      ws: 8.8.1
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
 
   /@nestjs/schematics/9.0.3_nobats3jkocaued6l3papcxri4:
     resolution: {integrity: sha512-kZrU/lrpVd2cnK8I3ibDb3Wi1ppl3wX3U3lVWoL+DzRRoezWKkh8upEL4q0koKmuXnsmLiu3UPxFeMOrJV7TSA==}
@@ -5847,19 +5826,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-
-  /ws/8.8.1:
-    resolution: {integrity: sha512-bGy2JzvzkPowEJV++hF07hAD6niYSr0JzBNo/J29WsB57A2r7Wlc1UFcTR9IzrPvuNVO4B8LGqF8qcpsVOhJCA==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: ^5.0.2
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-    dev: false
 
   /xtend/4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}

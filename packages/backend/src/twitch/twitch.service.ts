@@ -1,11 +1,12 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { ApiClient } from '@twurple/api/lib'
-import { EventSubListener } from '@twurple/eventsub/lib'
+import { ApiClient } from '@twurple/api'
+import { EventSubListener } from '@twurple/eventsub'
 
 import TwitchClient from './twitch.client'
-import TwitchListener from './twitch.listener'
 import { TwitchGateway } from './twitch.gateway'
+import TwitchListener from './twitch.listener'
+import * as utils from './twitch.listener.utils'
 
 @Injectable()
 export class TwitchService implements OnModuleDestroy {
@@ -33,8 +34,9 @@ export class TwitchService implements OnModuleDestroy {
     await this.unsubscribeAll()
     await this.listener.listen()
 
-    this.subscribeToChannelSubscriptionEvents(this.channelId)
-    this.subscribeToChannelSubscriptionMessageEvents(this.channelId)
+    this.logger.log(`Subscribing to channel events`)
+    await this.subscribeToChannelSubscriptionEvents(this.channelId)
+    await this.subscribeToChannelSubscriptionMessageEvents(this.channelId)
   }
 
   async onModuleDestroy(): Promise<void> {
@@ -52,31 +54,33 @@ export class TwitchService implements OnModuleDestroy {
   }
 
   async unsubscribeAll() {
-    await this.apiClient.eventSub.deleteAllSubscriptions()
+    return this.apiClient.eventSub.deleteAllSubscriptions()
   }
+
+  // Individual subscriptions.
 
   async subscribeToChannelSubscriptionEvents(userId: string) {
     const listener = await this.listener.subscribeToChannelSubscriptionEvents(
+      userId,
+      async e => {
+        const payload = await utils.processChannelSubscriptionEvent(e)
+        // this.logger.log(
+        //   `[${e.broadcasterName}] ${e.userDisplayName} subscribed`
+        // )
+        this.gateway.sendNotification(payload)
+      }
+    )
+    console.log(await listener.getCliTestCommand())
+    return listener
+  }
+
+  async subscribeToChannelSubscriptionMessageEvents(userId: string) {
+    return this.listener.subscribeToChannelSubscriptionMessageEvents(
       userId,
       async e => {
         this.logger.log(e)
         this.gateway.sendNotification(e)
       }
     )
-    const command = await listener.getCliTestCommand()
-    this.logger.log(command)
-  }
-
-  async subscribeToChannelSubscriptionMessageEvents(userId: string) {
-    const listener =
-      await this.listener.subscribeToChannelSubscriptionMessageEvents(
-        userId,
-        async e => {
-          this.logger.log(e)
-          this.gateway.sendNotification(e)
-        }
-      )
-    const command = await listener.getCliTestCommand()
-    this.logger.log(command)
   }
 }
