@@ -10,7 +10,7 @@ const listener = (apiClient: ApiClient, configService: ConfigService) => {
   )
 
   // Since we're using Render, we'll be "hardcoding" this.
-  const hostName = configService.get<string>('RENDER_EXTERNAL_URL')
+  const hostName = configService.get<string>('RENDER_EXTERNAL_HOSTNAME')
 
   const adapter = isLocal
     ? new NgrokAdapter()
