@@ -30,7 +30,7 @@ export class TwitchService implements OnModuleDestroy {
     this.channelId = channelId
 
     this.logger.log(`Connecting to EventSub`)
-    this.unsubscribeAll()
+    await this.unsubscribeAll()
     await this.listener.listen()
 
     this.subscribeToChannelSubscriptionEvents(this.channelId)
