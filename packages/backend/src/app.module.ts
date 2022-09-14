@@ -30,7 +30,6 @@ export class AppModule {
     if (!channelId)
       throw new Error('No TWITCH_CHANNEL_ID specified in the .env file!')
 
-    this.logger.log('Initializing Rykros')
     twitchService.init(channelId)
   }
 }
