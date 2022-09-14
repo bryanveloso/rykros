@@ -35,8 +35,15 @@ export class TwitchService implements OnModuleDestroy {
     await this.listener.listen()
 
     this.logger.log(`Subscribing to channel events`)
-    await this.subscribeToChannelSubscriptionEvents(this.channelId)
-    await this.subscribeToChannelSubscriptionMessageEvents(this.channelId)
+    await Promise.all([
+      this.subscribeToChannelFollowEvents(this.channelId),
+      this.subscribeToChannelSubscriptionEvents(this.channelId),
+      this.subscribeToChannelSubscriptionGiftEvents(this.channelId),
+      this.subscribeToChannelSubscriptionMessageEvents(this.channelId),
+      this.subscribeToChannelRaidEventsTo(this.channelId)
+    ])
+
+    this.logger.log(`TwitchService dependencies initialized`)
   }
 
   async onModuleDestroy(): Promise<void> {
@@ -59,28 +66,47 @@ export class TwitchService implements OnModuleDestroy {
 
   // Individual subscriptions.
 
+  async subscribeToChannelFollowEvents(userId: string) {
+    return this.listener.subscribeToChannelFollowEvents(userId, async e => {
+      const payload = await utils.processChannelFollowEvent(e)
+      this.gateway.sendNotification(payload)
+    })
+  }
+
   async subscribeToChannelSubscriptionEvents(userId: string) {
-    const listener = await this.listener.subscribeToChannelSubscriptionEvents(
+    return this.listener.subscribeToChannelSubscriptionEvents(
       userId,
       async e => {
         const payload = await utils.processChannelSubscriptionEvent(e)
-        // this.logger.log(
-        //   `[${e.broadcasterName}] ${e.userDisplayName} subscribed`
-        // )
         this.gateway.sendNotification(payload)
       }
     )
-    console.log(await listener.getCliTestCommand())
-    return listener
+  }
+
+  async subscribeToChannelSubscriptionGiftEvents(userId: string) {
+    return this.listener.subscribeToChannelSubscriptionGiftEvents(
+      userId,
+      async e => {
+        const payload = await utils.processChannelSubscriptionGiftEvent(e)
+        this.gateway.sendNotification(payload)
+      }
+    )
   }
 
   async subscribeToChannelSubscriptionMessageEvents(userId: string) {
     return this.listener.subscribeToChannelSubscriptionMessageEvents(
       userId,
       async e => {
-        this.logger.log(e)
-        this.gateway.sendNotification(e)
+        const payload = await utils.processChannelSubscriptionMessageEvent(e)
+        this.gateway.sendNotification(payload)
       }
     )
+  }
+
+  async subscribeToChannelRaidEventsTo(userId: string) {
+    return this.listener.subscribeToChannelRaidEventsTo(userId, async e => {
+      const payload = await utils.processChannelRaidEventTo(e)
+      this.gateway.sendNotification(payload)
+    })
   }
 }

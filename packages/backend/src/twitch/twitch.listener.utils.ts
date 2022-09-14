@@ -13,18 +13,22 @@ export const processChannelFollowEvent = async (
   const {
     broadcasterDisplayName,
     broadcasterId,
+    broadcasterName,
     followDate,
     userDisplayName,
-    userId
+    userId,
+    userName
   } = event
   const payload = {
     type: 'channel.follow',
     data: {
       broadcasterDisplayName,
       broadcasterId,
+      broadcasterName,
       followDate,
       userDisplayName,
-      userId
+      userId,
+      userName
     }
   }
 
@@ -37,20 +41,24 @@ export const processChannelSubscriptionEvent = async (
   const {
     broadcasterDisplayName,
     broadcasterId,
+    broadcasterName,
     isGift,
     tier,
     userDisplayName,
-    userId
+    userId,
+    userName
   } = event
   const payload = {
     type: 'channel.subscribe',
     data: {
       broadcasterDisplayName,
       broadcasterId,
+      broadcasterName,
       isGift,
       tier,
       userDisplayName,
-      userId
+      userId,
+      userName
     }
   }
 
@@ -60,9 +68,32 @@ export const processChannelSubscriptionEvent = async (
 export const processChannelSubscriptionGiftEvent = async (
   event: EventSubChannelSubscriptionGiftEvent
 ) => {
-  const {} = event
+  const {
+    amount,
+    broadcasterDisplayName,
+    broadcasterId,
+    broadcasterName,
+    cumulativeAmount,
+    gifterDisplayName,
+    gifterId,
+    gifterName,
+    isAnonymous,
+    tier
+  } = event
   const payload = {
-    type: 'channel.subscription.gift'
+    type: 'channel.subscription.gift',
+    data: {
+      amount,
+      broadcasterDisplayName,
+      broadcasterId,
+      broadcasterName,
+      cumulativeAmount,
+      gifterDisplayName,
+      gifterId,
+      gifterName,
+      isAnonymous,
+      tier
+    }
   }
 
   return payload
@@ -71,9 +102,34 @@ export const processChannelSubscriptionGiftEvent = async (
 export const processChannelSubscriptionMessageEvent = async (
   event: EventSubChannelSubscriptionMessageEvent
 ) => {
-  const {} = event
+  const {
+    broadcasterDisplayName,
+    broadcasterId,
+    broadcasterName,
+    cumulativeMonths,
+    durationMonths,
+    messageText,
+    streakMonths,
+    tier,
+    userDisplayName,
+    userId,
+    userName
+  } = event
   const payload = {
-    type: 'channel.subscription.message'
+    type: 'channel.subscription.message',
+    data: {
+      broadcasterDisplayName,
+      broadcasterId,
+      broadcasterName,
+      cumulativeMonths,
+      durationMonths,
+      messageText,
+      streakMonths,
+      tier,
+      userDisplayName,
+      userId,
+      userName
+    }
   }
 
   return payload
@@ -82,20 +138,58 @@ export const processChannelSubscriptionMessageEvent = async (
 export const processChannelCheerEvent = async (
   event: EventSubChannelCheerEvent
 ) => {
-  const {} = event
+  const {
+    bits,
+    broadcasterDisplayName,
+    broadcasterId,
+    broadcasterName,
+    isAnonymous,
+    message,
+    userDisplayName,
+    userId,
+    userName
+  } = event
   const payload = {
-    type: 'channel.cheer'
+    type: 'channel.cheer',
+    data: {
+      bits,
+      broadcasterDisplayName,
+      broadcasterId,
+      broadcasterName,
+      isAnonymous,
+      message,
+      userDisplayName,
+      userId,
+      userName
+    }
   }
 
   return payload
 }
 
-export const processChannelRaidEvent = async (
+export const processChannelRaidEventTo = async (
   event: EventSubChannelRaidEvent
 ) => {
-  const {} = event
+  const {
+    raidedBroadcasterDisplayName,
+    raidedBroadcasterId,
+    raidedBroadcasterName,
+    raidingBroadcasterDisplayName,
+    raidingBroadcasterId,
+    raidingBroadcasterName,
+    viewers
+  } = event
   const payload = {
-    type: 'channel.raid'
+    type: 'channel.raid',
+    data: {
+      raidedBroadcasterDisplayName,
+      raidedBroadcasterId,
+      raidedBroadcasterName,
+      raidingBroadcasterDisplayName,
+      raidingBroadcasterId,
+      raidingBroadcasterName,
+      viewers
+    }
   }
 
   return payload
